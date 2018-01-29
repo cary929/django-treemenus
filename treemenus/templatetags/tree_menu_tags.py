@@ -22,7 +22,7 @@ register = template.Library()
 def get_treemenus_static_prefix():
     if django.VERSION >= (1, 3):
         from django.templatetags.static import PrefixNode
-        return PrefixNode.handle_simple("STATIC_URL") + 'img/treemenus'
+        return PrefixNode.handle_simple("STATIC_URL") + 'treemenus/img'
     else:
         from django.contrib.admin.templatetags.adminmedia import admin_media_prefix
         return admin_media_prefix() + 'img/admin/'
@@ -60,11 +60,16 @@ class ReverseNamedURLNode(Node):
         self.parser = parser
 
     def render(self, context):
-        from django.template import TOKEN_BLOCK, Token
+        try:
+            from django.template import TOKEN_BLOCK, Token
+        except:
+            from django.template.base import TOKEN_BLOCK, Token
+
 
         resolved_named_url = self.named_url.resolve(context)
         if django.VERSION >= (1, 3):
-            contents = 'url "%s"' % resolved_named_url
+            # contents = 'url "%s"' % resolved_named_url
+            contents = 'url %s' % resolved_named_url
         else:
             contents = 'url %s' % resolved_named_url
 
